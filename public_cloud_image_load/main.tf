@@ -4,10 +4,10 @@ resource "null_resource" "image_copy" {
 
   provisioner "file" {
     connection {
-      host          = "${ibm_compute_vm_instance.icp-boot.ipv4_address_private}"
+      host          = "${var.boot_ipv4_address_private}"
       user          = "icpdeploy"
-      private_key   = "${tls_private_key.installkey.private_key_pem}"
-      bastion_host  = "${var.private_network_only ? ibm_compute_vm_instance.icp-boot.ipv4_address_private : ibm_compute_vm_instance.icp-boot.ipv4_address}"
+      private_key   = "${var.private_key_pem}"
+      bastion_host  = "${var.private_network_only ? var.boot_ipv4_address_private : ivar.boot_ipv4_address}"
     }
 
     source = "${var.image_location}"
@@ -22,10 +22,10 @@ resource "null_resource" "image_load" {
 
 
   connection {
-    host          = "${ibm_compute_vm_instance.icp-boot.ipv4_address_private}"
+    host          = "${var.boot_ipv4_address_private}"
     user          = "icpdeploy"
-    private_key   = "${tls_private_key.installkey.private_key_pem}"
-    bastion_host  = "${var.private_network_only ? ibm_compute_vm_instance.icp-boot.ipv4_address_private : ibm_compute_vm_instance.icp-boot.ipv4_address}"
+    private_key   = "${var.private_key_pem}"
+    bastion_host  = "${var.private_network_only ? var.boot_ipv4_address_private : var.boot_ipv4_address}"
   }
 
   provisioner "file" {
