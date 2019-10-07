@@ -180,7 +180,7 @@ variable "install-verbosity" {
   default     = ""
 }
 
-variable "dependsOn"            { default = "true"  description = "Boolean for dependency"}
+variable "dependsOn"            { description = "Boolean for dependency"}
 
 locals {
   spec-icp-ips  = "${distinct(compact(concat(list(var.boot-node), var.icp-master, var.icp-proxy, var.icp-management, var.icp-worker, var.icp-va)))}"
