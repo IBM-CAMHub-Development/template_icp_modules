@@ -6,7 +6,7 @@ resource "null_resource" "image_copy" {
     connection {
       host          = "${var.boot_ipv4_address_private}"
       user          = "icpdeploy"
-      private_key   = "${var.private_key_pem}"
+      private_key   = "${var.boot_private_key_pem}"
       bastion_host  = "${var.private_network_only ? var.boot_ipv4_address_private : var.boot_ipv4_address}"
     }
 
@@ -24,7 +24,7 @@ resource "null_resource" "image_load" {
   connection {
     host          = "${var.boot_ipv4_address_private}"
     user          = "icpdeploy"
-    private_key   = "${var.private_key_pem}"
+    private_key   = "${var.boot_private_key_pem}"
     bastion_host  = "${var.private_network_only ? var.boot_ipv4_address_private : var.boot_ipv4_address}"
   }
 
