@@ -46,10 +46,9 @@ resource "null_resource" "image_load" {
   }
 }
 
-
 resource "null_resource" "image_loading_finished" {
   depends_on = ["null_resource.image_load"]
   provisioner "local-exec" {
-    command = "echo 'IBM Cloud Private Image has been successfully loaded. "
+    command = "echo 'IBM Cloud Private Image has been successfully loaded. '"
   }
 }

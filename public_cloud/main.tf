@@ -1,4 +1,11 @@
 
+# Workaround for lack of module dependencies in terraform. See https://github.com/hashicorp/terraform/issues/10462
+resource "null_resource" "image_loading_finished" {
+  provisioner "local-exec" {
+    command = "echo 'IBM Cloud Private Image has been successfully loaded. Loading resource ID : '${var.dependsOn}"
+  }
+}
+
 # Generate a new key if this is required
 resource "tls_private_key" "icpkey" {
   # count       = "${var.generate_key ? 1 : 0}" # Generate the key anyways, since the output logic needs it for interpolation
@@ -12,7 +19,7 @@ resource "tls_private_key" "icpkey" {
 ## Cluster Pre-config hook
 resource "null_resource" "icp-cluster-preconfig-hook" {
   count = "${contains(keys(var.hooks), "cluster-preconfig") ? var.cluster_size : 0}"
-
+  depends_on = ["null_resource.image_loading_finished"]
   connection {
       host          = "${element(local.icp-ips, count.index)}"
       user          = "${var.ssh_user}"
