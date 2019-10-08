@@ -34,7 +34,6 @@ resource "null_resource" "image_load" {
   }
 
   provisioner "remote-exec" {
-
     # We need to wait for cloud init to finish it's boot sequence.
     inline = [
       "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
