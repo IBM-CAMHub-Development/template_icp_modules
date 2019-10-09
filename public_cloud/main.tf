@@ -38,7 +38,7 @@ resource "null_resource" "icp-cluster-preconfig-hook" {
 
 ## Actions that has to be taken on all nodes in the cluster
 resource "null_resource" "icp-cluster" {
-  depends_on = ["null_resource.icp-cluster-preconfig-hook"]
+  depends_on = ["null_resource.icp-cluster-preconfig-hook", "null_resource.image_loading_finished"]
   count = "${var.cluster_size}"
 
   connection {
