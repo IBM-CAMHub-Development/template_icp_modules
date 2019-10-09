@@ -10,9 +10,9 @@ output "icp_private_key" {
 }
 
 output "install_complete" {
-  depends_on  = ["null_resource.icp-install"]
+  depends_on  = ["null_resource.icp-upgrade-version"]
   description = "Boolean value that is set to true when ICP installation process is completed"
-  value       = "true"
+  value       = "${null_resource.icp_deploy_finished.id}"
 }
 
 output "icp_version" {

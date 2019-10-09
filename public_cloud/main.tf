@@ -404,3 +404,10 @@ resource "null_resource" "icp-upgrade-version" {
     ]
   }
 }
+
+resource "null_resource" "icp_deploy_finished" {
+  depends_on = ["null_resource.icp-upgrade-version"]
+  provisioner "local-exec" {
+    command = "echo 'IBM Cloud Private has been successfully deployed. '"
+  }
+}
