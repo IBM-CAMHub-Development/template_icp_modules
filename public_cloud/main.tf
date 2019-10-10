@@ -411,3 +411,8 @@ resource "null_resource" "icp_deploy_finished" {
     command = "echo 'IBM Cloud Private has been successfully deployed. '"
   }
 }
+
+data "external" "check_installed" {
+  depends_on = ["null_resource.icp-upgrade-version"]
+  program = ["/bin/bash", "${path.module}/scripts/common/check-installed.sh"]
+}
