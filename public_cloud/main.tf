@@ -189,8 +189,6 @@ resource "null_resource" "icp-boot" {
   }
 }
 
-
-
 # Generate all necessary configuration files, load image files, etc
 resource "null_resource" "icp-config" {
   depends_on = ["null_resource.icp-boot"]
@@ -294,7 +292,6 @@ resource "null_resource" "icp-install" {
     agent         = "${var.ssh_agent}"
     bastion_host  = "${var.bastion_host}"
   }
-
 
   provisioner "remote-exec" {
     inline = [
@@ -410,9 +407,4 @@ resource "null_resource" "icp_deploy_finished" {
   provisioner "local-exec" {
     command = "echo 'IBM Cloud Private has been successfully deployed. '"
   }
-}
-
-data "external" "check_installed" {
-  depends_on = ["null_resource.icp-upgrade-version"]
-  program = ["/bin/bash", "${path.module}/scripts/common/check-installed.sh"]
 }
