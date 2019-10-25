@@ -57,14 +57,6 @@ config_file=$(
   else
     echo "storage_class: generic"
   fi
-  echo ""
-  echo "openshift:"
-  echo "  console:"
-  echo "    host: ${ocp_master_host}.${ocp_vm_domain_name}"
-  echo "    port: 8443"
-  echo "  router:"
-  echo "    cluster_host: icp-console.${ocp_router}"
-  echo "    proxy_host: icp-proxy.${ocp_router}"
 )
 
 echo "${config_file}" >> /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
