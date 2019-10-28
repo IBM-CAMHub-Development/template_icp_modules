@@ -47,7 +47,7 @@ resource "null_resource" "setup_installer" {
       "chmod 755 /tmp/config_cluster.sh",
       "bash -c '/tmp/config_cluster.sh ${var.icp_master_host} ${var.icp_proxy_host} ${var.icp_management_host} ${var.ocp_master_host} ${var.ocp_vm_domain_name} ${var.icp_version} ${var.ocp_enable_glusterfs}'",
       "cd /opt/ibm-cloud-private-rhos-${var.icp_version}/cluster",
-      "bash -c 'sudo docker run -t --net=host -e LICENSE=accept -v $(pwd):/installer/cluster:z -v /var/run:/var/run:z --security-opt label:disable ibmcom/icp-inception-amd64:${var.icp_version}-rhel-ee install-with-openshift | tee /tmp/install.log; test $${PIPESTATUS[0]} -eq 0'",
+      "bash -c 'sudo docker run -t --net=host -e LICENSE=accept -v $(pwd):/installer/cluster:z -v /var/run:/var/run:z -v /etc/docker:/etc/docker:z --security-opt label:disable ibmcom/icp-inception-amd64:${var.icp_version}-rhel-ee install-with-openshift | tee /tmp/install.log; test $${PIPESTATUS[0]} -eq 0'",
     ]
   }
 }
