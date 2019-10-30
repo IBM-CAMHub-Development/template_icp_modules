@@ -1,12 +1,12 @@
-resource "null_resource" "image_copy_finished" {
-  provisioner "local-exec" {
-    command = "echo 'IBM Cloud Private Image has been successfully copied. Loading resource ID : '${var.image_copy_finished}"
-  }
-}
+#resource "null_resource" "image_copied" {
+#  provisioner "local-exec" {
+#    command = "echo 'IBM Cloud Private Image has been successfully copied. Loading resource ID : '${var.image_copy_finished}"
+#  }
+#}
 resource "null_resource" "image_load" {
   # Only do an image load if we have provided a location. Presumably if not we'll be loading from private registry server
   count = "${var.image_location != "" ? 1 : 0}"
-  depends_on = ["null_resource.image_copy_finished"]
+ # depends_on = ["null_resource.image_copied"]
 
   connection {
     host          = "${var.boot_ipv4_address_private}"
