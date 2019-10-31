@@ -61,6 +61,10 @@ config_file=$(
 
 echo "${config_file}" >> /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
 
+# run installer
+cd /opt/ibm-cloud-private-rhos-${icp_version}/cluster
+sudo docker run -t --net=host -e LICENSE=accept -v $(pwd):/installer/cluster:z -v /var/run:/var/run:z -v /etc/docker:/etc/docker:z --security-opt label:disable ibmcom/icp-inception-amd64:${icp_version}-rhel-ee install-with-openshift | tee /tmp/install.log; test $${PIPESTATUS[0]} -eq 0
+
 # send certificate to all other nodes
 scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
 scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
