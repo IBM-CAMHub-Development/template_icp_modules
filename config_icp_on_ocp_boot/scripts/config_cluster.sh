@@ -60,3 +60,8 @@ config_file=$(
 )
 
 echo "${config_file}" >> /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
+
+# send certificate to all other nodes
+scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
