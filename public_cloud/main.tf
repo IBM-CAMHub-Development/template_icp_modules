@@ -195,7 +195,7 @@ resource "null_resource" "icp-image" {
 # First make sure scripts and configuration files are copied
 resource "null_resource" "icp-boot" {
 
-  depends_on = ["null_resource.icp-docker"]
+  depends_on = ["null_resource.icp-image"]
 
   # The first master is always the boot master where we run provisioning jobs from
   connection {
