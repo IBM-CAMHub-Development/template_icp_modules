@@ -81,6 +81,12 @@ config_file=$(
 
 echo "${config_file}" >> /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
 
+#ssh key
+yum -y install sshpass
+sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_master_host}.${ocp_vm_domain_name}
+sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_proxy_host}.${ocp_vm_domain_name}
+sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_management_host}.${ocp_vm_domain_name}
+
 # run installer
 cd /opt/ibm-cloud-private-rhos-${icp_version}/cluster
 sudo docker run -t --net=host -e LICENSE=accept -v $(pwd):/installer/cluster:z -v /var/run:/var/run:z -v /etc/docker:/etc/docker:z --security-opt label:disable ibmcom/icp-inception-amd64:${icp_version}-rhel-ee install-with-openshift | tee /tmp/install.log; test $${PIPESTATUS[0]} -eq 0
@@ -91,10 +97,6 @@ if [[ $ocp_version == "3" ]]; then
   scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
 elif [[ $ocp_version == "4" ]]; then
-  yum -y install sshpass
-  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_master_host}.${ocp_vm_domain_name}
-  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_proxy_host}.${ocp_vm_domain_name}
-  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_management_host}.${ocp_vm_domain_name}
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
