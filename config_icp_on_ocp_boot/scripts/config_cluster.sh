@@ -91,10 +91,10 @@ if [[ $ocp_version == "3" ]]; then
   scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
 elif [[ $ocp_version == "4" ]]; then
-  #yum -y install sshpass
-  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_master_host}.${ocp_vm_domain_name}
-  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_proxy_host}.${ocp_vm_domain_name}
-  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_management_host}.${ocp_vm_domain_name}
+  yum -y install sshpass
+  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_master_host}.${ocp_vm_domain_name}
+  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_proxy_host}.${ocp_vm_domain_name}
+  sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_management_host}.${ocp_vm_domain_name}
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
   scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
