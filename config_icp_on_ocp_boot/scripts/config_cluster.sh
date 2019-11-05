@@ -12,8 +12,14 @@ sudo cp /etc/origin/master/admin.kubeconfig /opt/ibm-cloud-private-rhos-${icp_ve
 
 sed -i -e '/cluster_node/,+16 d' /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
 
-ocp_router=$(sed -n '/openshift_master_default_subdomain/p' /etc/ansible/hosts | cut -d '=' -f 2)
+FILE=/etc/ansible/hosts
+if test -f "$FILE"; then
+  ocp_router=$(sed -n '/openshift_master_default_subdomain/p' /etc/ansible/hosts | cut -d '=' -f 2)
+else
+  ocp_router=$5
+fi
 
+#generate config file
 if [[ $ocp_enable_glusterfs == "false" ]]; then
   cat > generic-gce.yaml << EOF
 kind: StorageClass
@@ -52,11 +58,23 @@ config_file=$(
   echo "  management:"
   echo "    - ${icp_management_host}.${ocp_vm_domain_name}"
   echo ""
-  if [[ $ocp_enable_glusterfs == "true" ]]; then
+  if uname -a | grep -i "X86" > /dev/null; then
+    echo "storage_class: ibmc-file-gold"
+  elif uname -a | grep -i "ppc64le" > /dev/null; then
+    echo "storage_class: ibmc-powervc-k8s-volume-default"
+  elif [[ $ocp_enable_glusterfs == "true" ]]; then
     echo "storage_class: glusterfs-storage"
   else
     echo "storage_class: generic"
   fi
+  echo ""
+  echo "openshift:"
+  echo "  console:"
+  echo "    host: ${ocp_master_host}.${ocp_vm_domain_name}"
+  echo "    port: 8443"
+  echo "  router:"
+  echo "    cluster_host: icp-console.${ocp_router}"
+  echo "    proxy_host: icp-proxy.${ocp_router}"
 )
 
 echo "${config_file}" >> /opt/ibm-cloud-private-rhos-${icp_version}/cluster/config.yaml
