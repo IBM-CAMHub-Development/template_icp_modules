@@ -14,8 +14,10 @@ sed -i -e '/cluster_node/,+16 d' /opt/ibm-cloud-private-rhos-${icp_version}/clus
 
 FILE=/etc/ansible/hosts
 if test -f "$FILE"; then
+  ocp_version="3"
   ocp_router=$(sed -n '/openshift_master_default_subdomain/p' /etc/ansible/hosts | cut -d '=' -f 2)
 else
+  ocp_version="4"
   ocp_router=$5
 fi
 
@@ -84,6 +86,16 @@ cd /opt/ibm-cloud-private-rhos-${icp_version}/cluster
 sudo docker run -t --net=host -e LICENSE=accept -v $(pwd):/installer/cluster:z -v /var/run:/var/run:z -v /etc/docker:/etc/docker:z --security-opt label:disable ibmcom/icp-inception-amd64:${icp_version}-rhel-ee install-with-openshift | tee /tmp/install.log; test $${PIPESTATUS[0]} -eq 0
 
 # send certificate to all other nodes
-scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
-scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
-scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+if [[ $ocp_version == "3" ]]; then
+  scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+  scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+  scp -r /etc/docker/certs.d/docker-registry-default* root@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+elif [[ $ocp_version == "4" ]]; then
+  #yum -y install sshpass
+  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_master_host}.${ocp_vm_domain_name}
+  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_proxy_host}.${ocp_vm_domain_name}
+  #sshpass ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ${icp_management_host}.${ocp_vm_domain_name}
+  scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_master_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+  scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_proxy_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+  scp -r /etc/docker/certs.d/docker-registry-default* core@${icp_management_host}.${ocp_vm_domain_name}:/etc/docker/certs.d
+fi  
