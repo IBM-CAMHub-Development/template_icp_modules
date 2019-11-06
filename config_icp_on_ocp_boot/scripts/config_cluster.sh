@@ -3,10 +3,11 @@
 icp_master_host=$1
 icp_proxy_host=$2
 icp_management_host=$3
-ocp_master_host=$4
+ocp_console_fqdn=$4
 ocp_vm_domain_name=$5
 icp_version=$6
 ocp_enable_glusterfs=$7
+ocp_console_port=$8
 
 sudo cp /etc/origin/master/admin.kubeconfig /opt/ibm-cloud-private-rhos-${icp_version}/cluster/kubeconfig
 
@@ -72,8 +73,8 @@ config_file=$(
   echo ""
   echo "openshift:"
   echo "  console:"
-  echo "    host: ${ocp_master_host}.${ocp_vm_domain_name}"
-  echo "    port: 8443"
+  echo "    host: ${ocp_console_fqdn}"
+  echo "    port: ${ocp_console_port}"
   echo "  router:"
   echo "    cluster_host: icp-console.${ocp_router}"
   echo "    proxy_host: icp-proxy.${ocp_router}"

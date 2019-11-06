@@ -45,7 +45,7 @@ resource "null_resource" "setup_installer" {
       "echo 'default_admin_user: ${var.icp_admin_user}' >> /opt/ibm-cloud-private-rhos-${var.icp_version}/cluster/config.yaml",
       "echo 'default_admin_password: ${var.icp_admin_password}' >> /opt/ibm-cloud-private-rhos-${var.icp_version}/cluster/config.yaml",
       "chmod 755 /tmp/config_cluster.sh",
-      "bash -c '/tmp/config_cluster.sh ${var.icp_master_host} ${var.icp_proxy_host} ${var.icp_management_host} ${var.ocp_master_host} ${var.ocp_vm_domain_name} ${var.icp_version} ${var.ocp_enable_glusterfs}'",
+      "bash -c '/tmp/config_cluster.sh ${var.icp_master_host} ${var.icp_proxy_host} ${var.icp_management_host} ${var.ocp_console_fqdn} ${var.ocp_vm_domain_name} ${var.icp_version} ${var.ocp_enable_glusterfs} ${var.ocp_console_port}'",
     ]
   }
 }
