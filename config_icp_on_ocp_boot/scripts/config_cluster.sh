@@ -61,12 +61,12 @@ config_file=$(
   echo "  management:"
   echo "    - ${icp_management_host}.${ocp_vm_domain_name}"
   echo ""
-  if uname -a | grep -i "X86" > /dev/null; then
+  if [[ $ocp_enable_glusterfs == "true" ]]; then
+    echo "storage_class: glusterfs-storage"
+  elif uname -a | grep -i "X86" > /dev/null; then
     echo "storage_class: ibmc-file-gold"
   elif uname -a | grep -i "ppc64le" > /dev/null; then
     echo "storage_class: ibmc-powervc-k8s-volume-default"
-  elif [[ $ocp_enable_glusterfs == "true" ]]; then
-    echo "storage_class: glusterfs-storage"
   else
     echo "storage_class: generic"
   fi
